@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import javaKampDay5.Entities.Concretes.User;
 import javaKampDay5.business.abstracts.IUserService;
 import javaKampDay5.core.IEmailSender;
+import javaKampDay5.core.ISignUpService;
 import javaKampDay5.dataAccess.abstracts.UserDao;
 
 public class UserManager implements IUserService{
@@ -16,6 +17,15 @@ public class UserManager implements IUserService{
 	
 	private UserDao userDao;
 	private IEmailSender emailSender;
+	private ISignUpService signUpService;
+	
+	public UserManager(UserDao userDao, IEmailSender emailSender, ISignUpService signUpService) 
+	{
+		super();
+		this.userDao = userDao;
+		this.emailSender = emailSender;
+		this.signUpService = signUpService;
+	}
 	
 	public UserManager(UserDao userDao, IEmailSender emailSender) 
 	{
@@ -26,12 +36,13 @@ public class UserManager implements IUserService{
 
 	@Override
 	public void signUp(User user) {
-		if(MailVerification(user)==true && PasswordVerification(user)==true)
+		if(mailVerification(user)==true && passwordVerification(user)==true)
 		{
+			emailList.add(user.getEmail());
 			this.emailSender.sendVerifyEmail();
 			this.emailSender.isEmailClicked();
 			this.userDao.signUp(user);
-			System.out.println("Kullanýcý baþarýyla kayýt oldu.");
+			
 		}
 		else
 		{
@@ -39,7 +50,7 @@ public class UserManager implements IUserService{
 		}
 		
 	}
-
+	
 	@Override
 	public void update(User user) {
 		
@@ -58,7 +69,7 @@ public class UserManager implements IUserService{
 	}
 
 	
-	public boolean MailVerification(User user) {
+	public boolean mailVerification(User user) {
 		String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 		Pattern pattern = Pattern.compile(regex);
 
@@ -75,7 +86,7 @@ public class UserManager implements IUserService{
 	}
 
 	
-	public boolean PasswordVerification(User user) {
+	public boolean passwordVerification(User user) {
 		String regex = "[0-9a-zA-Z]{6,}";
 		Pattern pattern = Pattern.compile(regex);
 
@@ -92,7 +103,7 @@ public class UserManager implements IUserService{
 	
 	
 	
-	public boolean NameVerification(User user) {
+	public boolean nameVerification(User user) {
 		String regex = "[0-9a-zA-Z]{6,}";
 		Pattern pattern = Pattern.compile(regex);
 

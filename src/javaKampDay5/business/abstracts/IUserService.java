@@ -6,7 +6,7 @@ public interface IUserService {
 	void signUp(User user);
 	void update(User user);
 	void delete(User user);
-	boolean MailVerification(User user);
-	boolean PasswordVerification(User user);
-	boolean NameVerification(User user);
+	boolean mailVerification(User user);
+	boolean passwordVerification(User user);
+	boolean nameVerification(User user);
 }
